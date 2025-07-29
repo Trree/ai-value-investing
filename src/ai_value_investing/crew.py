@@ -3,6 +3,8 @@ from crewai.project import CrewBase, agent, crew, task
 from crewai.agents.agent_builder.base_agent import BaseAgent
 from typing import List
 from crewai_tools import WebsiteSearchTool
+from .tools.pe_tool import StockInfoTools 
+
 # If you want to run a snippet of code before or after the crew starts,
 # you can use the @before_kickoff and @after_kickoff decorators
 # https://docs.crewai.com/concepts/crews#example-crew-class-with-decorators
@@ -20,6 +22,22 @@ class AiValueInvesting():
     
     # If you would like to add tools to your agents, you can learn more about it here:
     # https://docs.crewai.com/concepts/agents#agent-tools
+
+    @agent
+    def stock_query_agent(self) -> Agent:
+        return Agent(
+            config=self.agents_config['stock_query'],
+            tools=[StockInfoTools.get_stock_pe],
+            verbose=True
+        )
+ 
+    @task
+    def stock_query_analysis(self) -> Task: 
+        return Task(
+            config=self.tasks_config['stock_query'],
+            agent=self.stock_query_agent(),
+        )
+
 
     @agent
     def financial_agent(self) -> Agent:

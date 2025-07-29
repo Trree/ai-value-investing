@@ -19,7 +19,7 @@ def run():
     """
     inputs = {
         'query': 'What is the company you want to analyze?',
-        'company_stock': 'AMZN',
+        'company_stock': '中远海控',
     }
     
     try:

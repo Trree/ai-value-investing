@@ -1,22 +1,11 @@
 import baostock as bs
 from datetime import datetime, timedelta
+from crewai.tools import tool
 
-
-class StockInfoToolInput(BaseModel):
-    """Input schema for MyCustomTool."""
-    argument: str = Field(..., description="股票代码")
-
-class StockInfoTool(BaseTool):
-    name: str = "query stock info"
-    description: str = (
-        "通过股票代码查询股票信息"
-    )
-    args_schema: Type[BaseModel] = MyCustomToolInput
-    
-    def _run(self, argument: str) -> str:
-        return get_stock_pe(argument)
-
-    def get_stock_pe(code):
+class StockInfoTools():
+    @tool("get_stock_pe")
+    def get_stock_pe(code : str):
+        """Clear description for what this tool is useful for, your agent will need this information to use it."""
         #### 登陆系统 ####
         lg = bs.login()
         # 显示登陆返回信息
@@ -41,7 +30,3 @@ class StockInfoTool(BaseTool):
         #### 登出系统 ####
         bs.logout()
         return rs.data[-1]
-
-if __name__ == '__main__':
-    pe = StockInfoTool().get_stock_pe("sh.601919")
-    print(pe)
