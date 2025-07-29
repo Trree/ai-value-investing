@@ -67,6 +67,20 @@ class AiValueInvesting():
             agent=self.ben_researcher(),
         )
 
+    @agent
+    def buffett_researcher(self) -> Agent:
+        return Agent(
+            config=self.agents_config['warren_buffett_analyst'], # type: ignore[index]
+            verbose=True
+        )
+
+    @task
+    def buffett_research_task(self) -> Task:
+        return Task(
+            config=self.tasks_config['warren_buffett_analyst'], # type: ignore[index]
+            agent=self.buffett_researcher(),
+        )
+
 
     @agent
     def reporting_analyst(self) -> Agent:
