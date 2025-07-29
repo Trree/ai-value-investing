@@ -1,6 +1,6 @@
 stock_query:
   description: >
-    Conduct a thorough analysis of {company_stock}股票代码，sh或sz.+6位数字代码，或者指数代码，如：sh.601398。sh：上海；sz：深圳
+    Conduct a thorough analysis of {company_stock}股票代码，sh或sz.+6位数字代码，或者指数代码，如:sh.601398.sh:上海;sz:深圳
   expected_output: >
     中文输出工具获得的信息
 
