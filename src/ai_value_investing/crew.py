@@ -25,10 +25,7 @@ class AiValueInvesting():
     def financial_agent(self) -> Agent:
         return Agent(
             config=self.agents_config['financial_analyst'],
-            verbose=True,
-            tools=[
-                WebsiteSearchTool()
-            ]
+            verbose=True
         )
     
     @task
@@ -39,11 +36,19 @@ class AiValueInvesting():
         )
 
     @agent
-    def researcher(self) -> Agent:
+    def ben_researcher(self) -> Agent:
         return Agent(
             config=self.agents_config['ben-graham-analyst'], # type: ignore[index]
             verbose=True
         )
+
+    @task
+    def ben_research_task(self) -> Task:
+        return Task(
+            config=self.tasks_config['ben-graham-analyst'], # type: ignore[index]
+            agent=self.ben_researcher(),
+        )
+
 
     @agent
     def reporting_analyst(self) -> Agent:
@@ -58,7 +63,8 @@ class AiValueInvesting():
     @task
     def research_task(self) -> Task:
         return Task(
-            config=self.tasks_config['investment_advisor'], # type: ignore[index]
+            config=self.tasks_config['recommend'], # type: ignore[index]
+            agent=self.reporting_analyst(),
         )
 
     @crew
@@ -72,5 +78,6 @@ class AiValueInvesting():
             tasks=self.tasks, # Automatically created by the @task decorator
             process=Process.sequential,
             verbose=True,
+            output_log_file=True,
             # process=Process.hierarchical, # In case you wanna use that instead https://docs.crewai.com/how-to/Hierarchical/
         )
