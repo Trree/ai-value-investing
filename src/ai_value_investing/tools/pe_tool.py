@@ -1,6 +1,7 @@
 import baostock as bs
 from datetime import datetime, timedelta
 from crewai.tools import tool
+import json
 
 def get_recent_quarter(which_quarter):
     today = datetime.now()
@@ -65,37 +66,43 @@ class StockInfoTools():
         | pbMRQ         | 市净率           | 精度：小数点后6位                                                   |
         | isST          | 是否ST          | 1是，0否                                                            |
         """
-        rs = bs.query_history_k_data_plus(code,
-                                          "date,code,open,high,low,close,preclose,volume,amount,adjustflag,turn,tradestatus,pctChg,peTTM,pbMRQ,psTTM,pcfNcfTTM,isST",
+        filed = "date,code,open,high,low,close,preclose,volume,amount,adjustflag,turn,tradestatus,pctChg,peTTM,pbMRQ,psTTM,pcfNcfTTM,isST"
+        rs = bs.query_history_k_data_plus(code, filed,
                                           start_date=yesterday_date, end_date=today_date,
                                           frequency="d", adjustflag="3")
+
+        filed_list = filed.split(",")
+        rs_result = dict(zip(filed_list, rs.data[-1]))
 
         balance_list = []
         year, quarter = get_recent_quarter(1)
         rs_balance = bs.query_balance_data(code, year=year, quarter=quarter)
         while (rs_balance.error_code == '0') & rs_balance.next():
             balance_list.append(rs_balance.get_row_data())
-
         if len(balance_list) == 0:
-            print("start 2")
             year, quarter = get_recent_quarter(2)
-            print(quarter)
             rs_balance = bs.query_balance_data(code, year=year, quarter=quarter)
             while (rs_balance.error_code == '0') & rs_balance.next():
                 balance_list.append(rs_balance.get_row_data())
 
-        rs_list = []
+        balance_result = {}
+        dividend_result = {}
+        if balance_list:
+            balance_result = dict(zip(rs_balance.fields, balance_list[0]))
+
+        dividend_list = []
         current_year, last_year = get_current_and_last_year()
         rs_dividend = bs.query_dividend_data(code, year=current_year, yearType="report")
         while (rs_dividend.error_code == '0') & rs_dividend.next():
-            rs_list.append(rs_dividend.get_row_data())
-        if len(rs_list) == 0 :
+            dividend_list.append(rs_dividend.get_row_data())
+        if len(dividend_list) == 0:
             rs_dividend = bs.query_dividend_data(code, year=last_year, yearType="report")
             while (rs_dividend.error_code == '0') & rs_dividend.next():
-                rs_list.append(rs_dividend.get_row_data())
-
-        # 打印输出
-        print(balance_list)
+                dividend_list.append(rs_dividend.get_row_data())
+        if dividend_list:
+            dividend_result = dict(zip(rs_dividend.fields, dividend_list[0]))
+        merged_map = {**rs_result, **balance_result, **dividend_result}
+        print(merged_map)
         #### 登出系统 ####
         bs.logout()
-        return rs.data[-1] + balance_list + rs_list
+        return json.dumps(merged_map, ensure_ascii=False)

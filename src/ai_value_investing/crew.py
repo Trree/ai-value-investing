@@ -47,6 +47,7 @@ class AiValueInvesting():
         return Task(
             config=self.tasks_config['financial_analysis'],
             agent=self.financial_agent(),
+            #async_execution=True
         )
 
     @agent
@@ -61,6 +62,7 @@ class AiValueInvesting():
         return Task(
             config=self.tasks_config['ben-graham-analyst'], # type: ignore[index]
             agent=self.ben_researcher(),
+            #async_execution=True
         )
 
     @agent
@@ -75,6 +77,7 @@ class AiValueInvesting():
         return Task(
             config=self.tasks_config['warren_buffett_analyst'], # type: ignore[index]
             agent=self.buffett_researcher(),
+            #async_execution=True
         )
 
 
