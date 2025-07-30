@@ -80,6 +80,22 @@ class AiValueInvesting():
             #async_execution=True
         )
 
+    @agent
+    def risk_management_agent(self) -> Agent:
+        return Agent(
+            config=self.agents_config['risk_management_agent'], # type: ignore[index]
+            verbose=True
+        )
+
+    @task
+    def risk_assessment_task(self) -> Task:
+        return Task(
+            config=self.tasks_config['risk_assessment_task'], # type: ignore[index]
+            agent=self.risk_management_agent(),
+            #async_execution=True
+        )
+
+
 
     @agent
     def reporting_analyst(self) -> Agent:
