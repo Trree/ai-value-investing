@@ -28,6 +28,14 @@ MODEL=deepseek/deepseek-chat
 DEEPSEEK_API_KEY=your api key
 ```
 
+### web ui
+
+```
+uv pip install gradio
+# 进入项目根目录
+python3 src/ai_value_investing/app.py
+```
+
 ## Support
 
 - [crewAI](https://crewai.com)
