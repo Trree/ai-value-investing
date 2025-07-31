@@ -34,22 +34,6 @@ class AiValueInvesting():
             agent=self.stock_query_agent(),
         )
 
-
-    @agent
-    def financial_agent(self) -> Agent:
-        return Agent(
-            config=self.agents_config['financial_analyst'],
-            verbose=True
-        )
-    
-    @task
-    def financial_analysis(self) -> Task: 
-        return Task(
-            config=self.tasks_config['financial_analysis'],
-            agent=self.financial_agent(),
-            #async_execution=True
-        )
-
     @agent
     def ben_researcher(self) -> Agent:
         return Agent(
