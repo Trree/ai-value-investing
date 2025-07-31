@@ -209,3 +209,4 @@ db/
 knowledge/
 logs.txt
 .idea/
+chromadb-*
