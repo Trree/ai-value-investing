@@ -9,8 +9,10 @@
 
 
 ```bash
+pip install crewai
+# 或者
 pip install uv
-uv tool install crewai
+uv tool install crewai 
 
 # 可选,安装本项目依赖
 crewai install
